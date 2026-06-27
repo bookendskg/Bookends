@@ -51,22 +51,41 @@ function toast(message, kind = "ok") {
 }
 
 /* ---------- tabs ---------- */
+const TAB_META = {
+  brands: { title: "Brands", sub: "Manage your restaurant brands." },
+  services: { title: "Services", sub: "What your group offers." },
+  automations: { title: "Automations", sub: "Your automation suite." },
+  sites: { title: "Sites", sub: "Your locations." },
+  settings: { title: "Site Settings", sub: "Hero, about, contact, socials & footer." },
+  signups: { title: "Email Signups", sub: "People waiting to hear from you." },
+};
+
 function switchTab(tab) {
   currentTab = tab;
   $$("#tabs .tab").forEach((b) => b.classList.toggle("active", b.dataset.tab === tab));
   const isCard = SECTIONS.includes(tab);
+  const meta = TAB_META[tab] || {};
+  $("#pageTitle").textContent = meta.title || "";
+  $("#pageSub").textContent = meta.sub || "";
+  $("#addCardBtn").style.display = isCard ? "" : "none";
+  $("#statRow").style.display = isCard ? "" : "none";
   $("#cardsPanel").style.display = isCard ? "" : "none";
   $("#settingsPanel").style.display = tab === "settings" ? "" : "none";
   $("#signupsPanel").style.display = tab === "signups" ? "" : "none";
 
-  if (isCard) {
-    $("#cardsTitle").textContent = SECTION_LABEL[tab];
-    loadCards();
-  } else if (tab === "settings") {
-    loadSettings();
-  } else if (tab === "signups") {
-    loadSignups();
-  }
+  if (isCard) loadCards();
+  else if (tab === "settings") loadSettings();
+  else if (tab === "signups") loadSignups();
+}
+
+function renderStats(cards) {
+  const total = cards.length;
+  const live = cards.filter((c) => c.published).length;
+  const hidden = total - live;
+  $("#statRow").innerHTML = `
+    <div class="stat-card"><div class="stat-label">Total cards</div><div class="stat-value">${total}</div></div>
+    <div class="stat-card"><div class="stat-label">Published</div><div class="stat-value ok">${live}</div></div>
+    <div class="stat-card"><div class="stat-label">Hidden</div><div class="stat-value accent">${hidden}</div></div>`;
 }
 
 /* ---------- cards ---------- */
@@ -76,6 +95,7 @@ async function loadCards() {
   try {
     const { cards } = await api(`/api/admin/cards?section=${currentTab}`);
     cardsCache = cards;
+    renderStats(cards);
     renderCardRows(cards);
   } catch (err) {
     list.innerHTML = `<p class="empty">${esc(err.message)}</p>`;
@@ -421,6 +441,7 @@ async function boot() {
   try {
     const me = await api("/api/me");
     $("#who").textContent = me.email;
+    $("#avatar").textContent = (me.email || "B").charAt(0).toUpperCase();
   } catch (_) {
     return; // api() already redirected to /login on 401
   }
@@ -434,8 +455,14 @@ async function boot() {
   }
 
   $$("#tabs .tab").forEach((b) =>
-    b.addEventListener("click", () => switchTab(b.dataset.tab))
+    b.addEventListener("click", () => {
+      switchTab(b.dataset.tab);
+      $("#sidebar").classList.remove("open"); // close drawer on mobile
+    })
   );
+  const sidebarToggle = $("#sidebarToggle");
+  if (sidebarToggle)
+    sidebarToggle.addEventListener("click", () => $("#sidebar").classList.toggle("open"));
   $("#addCardBtn").addEventListener("click", () => openModal(null));
   $("#modalClose").addEventListener("click", closeModal);
   $("#modalCancel").addEventListener("click", closeModal);

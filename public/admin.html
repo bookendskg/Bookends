@@ -11,55 +11,99 @@
 <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body class="admin-body">
-  <header class="admin-top">
-    <div class="brand">
-      <img src="assets/Bookends_Logo_RoyalBlue.png" alt="Bookends" />
-      <span>Admin</span>
-    </div>
-    <div class="right">
-      <a class="who" href="/" target="_blank" rel="noopener">View site ↗</a>
-      <span class="who" id="who"></span>
-      <button class="btn btn-ghost btn-sm" id="logoutBtn">Log out</button>
-    </div>
-  </header>
+  <div class="admin-shell">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <img src="assets/Bookends_Logo_RoyalBlue.png" alt="Bookends" />
+        <span>Admin</span>
+      </div>
 
-  <main class="admin-main">
-    <div class="tabs" id="tabs">
-      <button class="tab active" data-tab="brands">Brands</button>
-      <button class="tab" data-tab="services">Services</button>
-      <button class="tab" data-tab="automations">Automations</button>
-      <button class="tab" data-tab="sites">Sites</button>
-      <button class="tab" data-tab="settings">Settings</button>
-      <button class="tab" data-tab="signups">Signups</button>
-    </div>
+      <nav class="tabs" id="tabs">
+        <button class="tab active" data-tab="brands">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-8 9 8M5 10v10h14V10"/></svg>
+          <span>Brands</span>
+        </button>
+        <button class="tab" data-tab="services">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2V21a2 2 0 1 1-4 0v-.1A1.7 1.7 0 0 0 6 19.4l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1A1.7 1.7 0 0 0 3 13.6H3a2 2 0 1 1 0-4h.1A1.7 1.7 0 0 0 4.6 6L4.5 6a2 2 0 1 1 2.8-2.8l.1.1A1.7 1.7 0 0 0 10 4.6V4.5a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 2.9 1.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0 1.2 2.9H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+          <span>Services</span>
+        </button>
+        <button class="tab" data-tab="automations">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 2L3 14h7l-1 8 10-12h-7z"/></svg>
+          <span>Automations</span>
+        </button>
+        <button class="tab" data-tab="sites">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s7-5.2 7-11a7 7 0 0 0-14 0c0 5.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+          <span>Sites</span>
+        </button>
+        <div class="tabs-sep"></div>
+        <button class="tab" data-tab="settings">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></svg>
+          <span>Settings</span>
+        </button>
+        <button class="tab" data-tab="signups">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/></svg>
+          <span>Signups</span>
+        </button>
+      </nav>
 
-    <!-- CARD SECTIONS -->
-    <section class="panel" id="cardsPanel">
-      <div class="panel-head">
+      <div class="sidebar-foot">
+        <a class="view-site" href="/" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+          View live site
+        </a>
+        <div class="user">
+          <div class="avatar" id="avatar">B</div>
+          <div class="user-meta">
+            <div class="user-email" id="who">—</div>
+            <button class="link-btn" id="logoutBtn">Log out</button>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- CONTENT -->
+    <main class="admin-content">
+      <button class="sidebar-toggle" id="sidebarToggle" aria-label="Menu">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+
+      <header class="content-top">
         <div>
-          <h2 id="cardsTitle">Brands</h2>
+          <h1 id="pageTitle">Brands</h1>
+          <p class="content-sub" id="pageSub">Manage your restaurant brands.</p>
+        </div>
+        <button class="btn btn-primary" id="addCardBtn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+          Add card
+        </button>
+      </header>
+
+      <div class="stat-row" id="statRow"></div>
+
+      <!-- CARD SECTIONS -->
+      <section class="panel" id="cardsPanel">
+        <div class="panel-head">
           <p class="hint">Drag rows to reorder. Changes show on the live site instantly.</p>
         </div>
-        <button class="btn btn-primary btn-sm" id="addCardBtn">+ Add card</button>
-      </div>
-      <div class="row-list" id="cardList"></div>
-    </section>
+        <div class="row-list" id="cardList"></div>
+      </section>
 
-    <!-- SETTINGS -->
-    <section class="panel" id="settingsPanel" style="display:none">
-      <div class="panel-head"><h2>Site Settings</h2></div>
-      <div id="settingsForms"></div>
-    </section>
+      <!-- SETTINGS -->
+      <section class="panel" id="settingsPanel" style="display:none">
+        <div id="settingsForms"></div>
+      </section>
 
-    <!-- SIGNUPS -->
-    <section class="panel" id="signupsPanel" style="display:none">
-      <div class="panel-head">
-        <div><h2>Email Signups</h2><p class="hint" id="signupCount"></p></div>
-        <a class="btn btn-ghost btn-sm" id="csvBtn" href="/api/admin/signups?format=csv">Download CSV</a>
-      </div>
-      <div id="signupsTable"></div>
-    </section>
-  </main>
+      <!-- SIGNUPS -->
+      <section class="panel" id="signupsPanel" style="display:none">
+        <div class="panel-head">
+          <p class="hint" id="signupCount"></p>
+          <a class="btn btn-ghost btn-sm" id="csvBtn" href="/api/admin/signups?format=csv">Download CSV</a>
+        </div>
+        <div id="signupsTable"></div>
+      </section>
+    </main>
+  </div>
 
   <!-- CARD MODAL -->
   <div class="modal-back" id="modalBack">
@@ -74,47 +118,47 @@
         <div class="form-grid">
           <div class="full">
             <label class="field" style="margin:0">
-              <span style="font-size:.78rem;color:var(--muted)">Title *</span>
+              <span class="field-label">Title *</span>
               <input class="input" id="f_title" required />
             </label>
           </div>
 
           <div class="full" data-fields="brands">
             <label class="field" style="margin:0">
-              <span style="font-size:.78rem;color:var(--muted)">Tagline / subtitle</span>
+              <span class="field-label">Tagline / subtitle</span>
               <input class="input" id="f_subtitle" />
             </label>
           </div>
 
           <div class="full" data-fields="brands">
             <label class="field" style="margin:0">
-              <span style="font-size:.78rem;color:var(--muted)">Description</span>
+              <span class="field-label">Description</span>
               <textarea class="input" id="f_description"></textarea>
             </label>
           </div>
 
           <div data-fields="brands">
             <label class="field" style="margin:0">
-              <span style="font-size:.78rem;color:var(--muted)">CTA label</span>
+              <span class="field-label">CTA label</span>
               <input class="input" id="f_cta_label" />
             </label>
           </div>
           <div data-fields="brands">
             <label class="field" style="margin:0">
-              <span style="font-size:.78rem;color:var(--muted)">CTA link</span>
+              <span class="field-label">CTA link</span>
               <input class="input" id="f_cta_url" placeholder="# or https://" />
             </label>
           </div>
 
           <div class="full" data-fields="sites">
             <label class="field" style="margin:0">
-              <span style="font-size:.78rem;color:var(--muted)">Location</span>
+              <span class="field-label">Location</span>
               <input class="input" id="f_location" placeholder="Miami, FL" />
             </label>
           </div>
 
           <div class="full">
-            <span style="font-size:.78rem;color:var(--muted);display:block;margin-bottom:.4rem">Image</span>
+            <span class="field-label">Image</span>
             <div class="img-picker">
               <div class="preview" id="f_preview"></div>
               <select class="input" id="f_image_path" style="flex:1;min-width:160px">
