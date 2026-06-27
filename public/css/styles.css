@@ -290,7 +290,7 @@ img { display: block; max-width: 100%; }
 /* ---- service / automation pill cards ---- */
 .pill-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(92px, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 0.55rem;
 }
 .pill-card {
@@ -689,6 +689,7 @@ select.input { appearance: none; }
   .hero-wordmark img { width: 100%; max-width: 460px; }
   .two-col { grid-template-columns: 1fr; }
   .two-col > div + div { border-left: none; padding-left: 0; padding-top: 1.5rem; }
+  .pill-grid { grid-template-columns: repeat(3, 1fr); }
   .nav-links {
     position: fixed;
     top: 64px; right: 0;
@@ -708,6 +709,7 @@ select.input { appearance: none; }
 @media (max-width: 560px) {
   .signup form { flex-direction: column; }
   .form-grid { grid-template-columns: 1fr; }
+  .pill-grid { grid-template-columns: repeat(2, 1fr); }
   .footer { flex-direction: column; text-align: center; }
   .footer .socials { position: static; transform: none; }
 }
