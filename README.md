@@ -38,10 +38,10 @@ logged-in admin manages every card and the site's text.
    `cards`, `settings`, `signups` tables and seeds sample content.
 3. **Authentication → Users → Add user** → create your admin (email + password).
    Tip: set "Auto Confirm User" so the account is active immediately.
-4. **Project Settings → API** → copy these three values for the next step:
+4. **Project Settings → API Keys** → copy these three values for the next step:
    - Project URL → `SUPABASE_URL`
-   - `anon` `public` key → `SUPABASE_ANON_KEY`
-   - `service_role` key (secret) → `SUPABASE_SERVICE_ROLE_KEY`
+   - Publishable key (`sb_publishable_…`, formerly the `anon` `public` key) → `SUPABASE_ANON_KEY`
+   - Secret key (`sb_secret_…`, formerly the `service_role` key) → `SUPABASE_SERVICE_ROLE_KEY`
 
 ## 2. Run locally
 
@@ -52,11 +52,15 @@ node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"
 # paste it as SESSION_SECRET in .env
 
 npm install
-npm start                 # http://localhost:3000
+npm start                 # production-style start
+# or, with live reload during development:
+npm run dev               # node --watch
 ```
 
-- Home: <http://localhost:3000>
-- Admin: <http://localhost:3000/admin> (redirects to `/login`)
+The local port comes from `PORT` in `.env` (default **3001**).
+
+- Home: <http://localhost:3001>
+- Admin: <http://localhost:3001/admin> (redirects to `/login`)
 
 ## 3. Managing content (admin)
 
