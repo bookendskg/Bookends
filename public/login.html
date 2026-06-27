@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Admin Login — Bookends Hospitality</title>
+<link rel="icon" href="assets/Bookends_Logo_RoyalBlue.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <main class="auth-wrap">
+    <form class="auth-card" id="loginForm" novalidate>
+      <img src="assets/Bookends_Logo_RoyalBlue.png" alt="Bookends Hospitality" />
+      <h1>Admin Login</h1>
+      <p class="sub">Sign in to manage the site.</p>
+
+      <div class="field">
+        <label for="email">Email</label>
+        <input class="input" type="email" id="email" autocomplete="username" required />
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input class="input" type="password" id="password" autocomplete="current-password" required />
+      </div>
+
+      <button type="submit" class="btn btn-primary" id="submitBtn">Sign in</button>
+      <p class="form-msg" id="msg" role="status" aria-live="polite"></p>
+    </form>
+  </main>
+  <script src="js/login.js"></script>
+</body>
+</html>

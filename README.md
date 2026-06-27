@@ -1,124 +1,106 @@
-# Bookends Hospitality — Coming Soon
+# Bookends Hospitality
 
-A single-page "coming soon" landing page for **Bookends Hospitality**, with an email
-capture form and ambient animations. No build step, no dependencies — just open the file.
+A Bookends Hospitality marketing site (one scrolling home page — Hero, Brands,
+Services, Automations, Sites, footer) **plus an admin dashboard** where a
+logged-in admin manages every card and the site's text.
 
-## Preview
-
-Open `index.html` in any modern browser:
-
-```sh
-# Windows
-start index.html
-
-# macOS
-open index.html
-
-# Linux
-xdg-open index.html
-```
-
-Or serve it locally (recommended, so the logo mask/shimmer load cleanly):
-
-```sh
-npx serve .
-# or
-python -m http.server 8000
-```
-
-## Project structure
+- **App:** Node.js + Express, deployed as a Render Web Service.
+- **Database:** Supabase (Postgres), accessed server-side via `@supabase/supabase-js`.
+- **Admin auth:** Supabase Auth (server verifies the password, then issues a
+  signed httpOnly session cookie). All Supabase keys stay on the server.
+- **Card images:** image files committed to the `assets/` folder; the admin picks
+  one per card from a dropdown.
 
 ```
 .
-├── index.html                          # the entire page (HTML + CSS + JS inline)
-├── assets/
-│   └── Bookends_Logo_RoyalBlue.png     # brand logo (also used as favicon)
-└── README.md
+├── src/
+│   ├── server.js          # Express app (static + API)
+│   ├── supabase.js        # anon + service-role clients
+│   ├── auth.js            # login, requireAuth, same-origin guard
+│   └── routes/            # auth.js, public.js, admin.js
+├── public/
+│   ├── index.html         # home (data-driven)
+│   ├── admin.html         # admin dashboard
+│   ├── login.html
+│   ├── css/styles.css
+│   └── js/                # home.js, admin.js, login.js
+├── assets/                # logo + card images (committed)
+├── supabase/schema.sql    # run once in the Supabase SQL editor
+├── render.yaml            # Render Blueprint
+└── package.json
 ```
 
-## Features
+## 1. One-time Supabase setup
 
-- **Responsive** layout — form stacks on mobile.
-- **Email capture** with inline validation.
-- **Animations** — drifting aurora background, a shimmer sweep across the logo,
-  gentle logo float, staggered entrance, pulsing "Coming Soon" dot, and an
-  animated divider.
-- **Accessible** — respects `prefers-reduced-motion` (all motion disabled),
-  uses `aria-live` for form status.
-- **Self-contained** — all styles and scripts are inline; the only external
-  requests are Google Fonts and the local logo.
+1. Create a project at [supabase.com](https://supabase.com).
+2. **SQL editor → New query** → paste the contents of
+   [`supabase/schema.sql`](supabase/schema.sql) → **Run**. This creates the
+   `cards`, `settings`, `signups` tables and seeds sample content.
+3. **Authentication → Users → Add user** → create your admin (email + password).
+   Tip: set "Auto Confirm User" so the account is active immediately.
+4. **Project Settings → API** → copy these three values for the next step:
+   - Project URL → `SUPABASE_URL`
+   - `anon` `public` key → `SUPABASE_ANON_KEY`
+   - `service_role` key (secret) → `SUPABASE_SERVICE_ROLE_KEY`
 
-## Email signups
+## 2. Run locally
 
-There is **no backend yet**. On submit, valid emails are stored in the browser's
-`localStorage` under the key `bookends_signups` so nothing is lost before launch.
+```sh
+cp .env.example .env      # then fill in the 3 Supabase values
+# generate a session secret:
+node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"
+# paste it as SESSION_SECRET in .env
 
-To inspect collected emails, run this in the browser console:
-
-```js
-JSON.parse(localStorage.getItem("bookends_signups") || "[]")
+npm install
+npm start                 # http://localhost:3000
 ```
 
-### Wiring up a real backend
+- Home: <http://localhost:3000>
+- Admin: <http://localhost:3000/admin> (redirects to `/login`)
 
-Replace the `localStorage` block in the `<script>` at the bottom of `index.html`
-with a POST to your provider (e.g. Formspree, Mailchimp, or a custom endpoint):
+## 3. Managing content (admin)
 
-```js
-await fetch("https://your-endpoint.example/subscribe", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ email: value }),
-});
-```
+Sign in at `/login`, then:
 
-## Customization
+- **Brands / Services / Automations / Sites tabs** — add, edit, delete, reorder
+  (drag rows), and show/hide (publish toggle) cards. Changes appear on the live
+  site immediately.
+- **Settings tab** — edit hero text & buttons, About, Contact, social links, and
+  footer.
+- **Signups tab** — view captured "notify me" emails; download CSV.
 
-| What | Where |
-| --- | --- |
-| Colors / theme | `:root` CSS variables at the top of `index.html` |
-| Fonts | Google Fonts `<link>` in `<head>` |
-| Headline & copy | `<h1>` and `.lede` in the markup |
-| Logo | `assets/Bookends_Logo_RoyalBlue.png` (swap the file or update paths) |
-| Animation intensity | `@keyframes` and `animation` durations in the `<style>` block |
+### Adding card images
 
-## Deployment
+1. Drop image files into the `assets/` folder (e.g. `assets/aiko.jpg`).
+2. Commit & deploy (Render's filesystem is ephemeral, so images must live in the
+   repo — they can't be uploaded at runtime).
+3. In the admin card form, pick the image from the dropdown.
 
-Static files — host anywhere: Netlify, Vercel, GitHub Pages, Cloudflare Pages,
-or any static web server. Just upload the folder.
+## 4. Deploy to Render
 
-### Deploy to Render
+This repo includes [`render.yaml`](render.yaml) — a Node Web Service Blueprint.
 
-This repo includes a [`render.yaml`](render.yaml) Blueprint that defines a free
-**Static Site** — no build step, asset caching, and a catch-all rewrite to
-`index.html`.
+1. If an old `bookends` service exists from a previous attempt, **delete it** in
+   the Render dashboard (it was the wrong service type).
+2. Push this code to GitHub (`bookendskg/Bookends`).
+3. **dashboard.render.com → New → Blueprint** → connect the repo → Render reads
+   `render.yaml`.
+4. In the service's **Environment**, set the secret vars (the Blueprint marks them
+   `sync:false` so they aren't stored in the repo):
+   - `SUPABASE_URL`
+   - `SUPABASE_ANON_KEY`
+   - `SUPABASE_SERVICE_ROLE_KEY`
+   - (`SESSION_SECRET` is generated automatically; `NODE_ENV=production` is set.)
+5. **Apply / Deploy.** Visit the `*.onrender.com` URL — the home page is populated
+   from the seed data; log in at `/login` to manage it.
 
-**Option A — Blueprint (recommended, auto-deploy on push)**
+## Notes & gotchas
 
-1. Push the folder to GitHub (or GitLab/Bitbucket):
-
-   ```sh
-   git init
-   git add .
-   git commit -m "Bookends coming-soon landing page"
-   git branch -M main
-   git remote add origin https://github.com/<you>/bookends.git
-   git push -u origin main
-   ```
-
-2. Go to **dashboard.render.com → New → Blueprint**.
-3. Connect the repo. Render reads `render.yaml` and creates the static site.
-4. Click **Apply**. Every push to `main` then auto-deploys.
-
-**Option B — Manual static site (no `render.yaml` needed)**
-
-1. Push the repo to GitHub (see step 1 above).
-2. **dashboard.render.com → New → Static Site**, connect the repo.
-3. Settings:
-   - **Build Command:** leave empty
-   - **Publish Directory:** `.`
-4. Click **Create Static Site**.
-
----
-
-&copy; 2026 Bookends Hospitality
+- **Supabase free projects pause after ~7 days of inactivity** — if the site shows
+  errors, resume the project from the Supabase dashboard.
+- **Render free Web Services sleep after ~15 min idle** — the first request after
+  idle takes ~30–60s to wake (cold start).
+- **Never expose the `service_role` key** to the browser. This app keeps it
+  server-side only; the frontend talks only to this app's API.
+- The `cards` table powers all four sections via a `section` column, so the same
+  admin UI manages every section.

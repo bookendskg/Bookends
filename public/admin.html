@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Admin — Bookends Hospitality</title>
+<link rel="icon" href="assets/Bookends_Logo_RoyalBlue.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="admin-body">
+  <header class="admin-top">
+    <div class="brand">
+      <img src="assets/Bookends_Logo_RoyalBlue.png" alt="Bookends" />
+      <span>Admin</span>
+    </div>
+    <div class="right">
+      <a class="who" href="/" target="_blank" rel="noopener">View site ↗</a>
+      <span class="who" id="who"></span>
+      <button class="btn btn-ghost btn-sm" id="logoutBtn">Log out</button>
+    </div>
+  </header>
+
+  <main class="admin-main">
+    <div class="tabs" id="tabs">
+      <button class="tab active" data-tab="brands">Brands</button>
+      <button class="tab" data-tab="services">Services</button>
+      <button class="tab" data-tab="automations">Automations</button>
+      <button class="tab" data-tab="sites">Sites</button>
+      <button class="tab" data-tab="settings">Settings</button>
+      <button class="tab" data-tab="signups">Signups</button>
+    </div>
+
+    <!-- CARD SECTIONS -->
+    <section class="panel" id="cardsPanel">
+      <div class="panel-head">
+        <div>
+          <h2 id="cardsTitle">Brands</h2>
+          <p class="hint">Drag rows to reorder. Changes show on the live site instantly.</p>
+        </div>
+        <button class="btn btn-primary btn-sm" id="addCardBtn">+ Add card</button>
+      </div>
+      <div class="row-list" id="cardList"></div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section class="panel" id="settingsPanel" style="display:none">
+      <div class="panel-head"><h2>Site Settings</h2></div>
+      <div id="settingsForms"></div>
+    </section>
+
+    <!-- SIGNUPS -->
+    <section class="panel" id="signupsPanel" style="display:none">
+      <div class="panel-head">
+        <div><h2>Email Signups</h2><p class="hint" id="signupCount"></p></div>
+        <a class="btn btn-ghost btn-sm" id="csvBtn" href="/api/admin/signups?format=csv">Download CSV</a>
+      </div>
+      <div id="signupsTable"></div>
+    </section>
+  </main>
+
+  <!-- CARD MODAL -->
+  <div class="modal-back" id="modalBack">
+    <div class="modal">
+      <div class="modal-head">
+        <h3 id="modalTitle">Add card</h3>
+        <button class="x" id="modalClose" aria-label="Close">&times;</button>
+      </div>
+      <form id="cardForm">
+        <input type="hidden" id="f_id" />
+        <input type="hidden" id="f_section" />
+        <div class="form-grid">
+          <div class="full">
+            <label class="field" style="margin:0">
+              <span style="font-size:.78rem;color:var(--muted)">Title *</span>
+              <input class="input" id="f_title" required />
+            </label>
+          </div>
+
+          <div class="full" data-fields="brands">
+            <label class="field" style="margin:0">
+              <span style="font-size:.78rem;color:var(--muted)">Tagline / subtitle</span>
+              <input class="input" id="f_subtitle" />
+            </label>
+          </div>
+
+          <div class="full" data-fields="brands">
+            <label class="field" style="margin:0">
+              <span style="font-size:.78rem;color:var(--muted)">Description</span>
+              <textarea class="input" id="f_description"></textarea>
+            </label>
+          </div>
+
+          <div data-fields="brands">
+            <label class="field" style="margin:0">
+              <span style="font-size:.78rem;color:var(--muted)">CTA label</span>
+              <input class="input" id="f_cta_label" />
+            </label>
+          </div>
+          <div data-fields="brands">
+            <label class="field" style="margin:0">
+              <span style="font-size:.78rem;color:var(--muted)">CTA link</span>
+              <input class="input" id="f_cta_url" placeholder="# or https://" />
+            </label>
+          </div>
+
+          <div class="full" data-fields="sites">
+            <label class="field" style="margin:0">
+              <span style="font-size:.78rem;color:var(--muted)">Location</span>
+              <input class="input" id="f_location" placeholder="Miami, FL" />
+            </label>
+          </div>
+
+          <div class="full">
+            <span style="font-size:.78rem;color:var(--muted);display:block;margin-bottom:.4rem">Image</span>
+            <div class="img-picker">
+              <div class="preview" id="f_preview"></div>
+              <select class="input" id="f_image_path" style="flex:1;min-width:160px">
+                <option value="">— No image —</option>
+              </select>
+            </div>
+            <p class="hint" style="margin-top:.4rem">Add image files to the repo <code>assets/</code> folder, then pick one here.</p>
+          </div>
+
+          <div class="full check-row" data-fields="brands">
+            <input type="checkbox" id="f_coming_soon" />
+            <label for="f_coming_soon">"Coming soon" style card</label>
+          </div>
+          <div class="full check-row">
+            <input type="checkbox" id="f_published" checked />
+            <label for="f_published">Published (visible on site)</label>
+          </div>
+        </div>
+
+        <div class="modal-foot">
+          <button type="button" class="btn btn-ghost" id="modalCancel">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="modalSave">Save card</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script src="js/admin.js"></script>
+</body>
+</html>
