@@ -77,18 +77,18 @@ function renderSvc(list, targetSel) {
   }
   grid.innerHTML = list
     .map((c) => {
-      const desc = c.description ? `<p>${esc(c.description)}</p>` : "";
-      const link = c.cta_label
-        ? `<a class="svc-link" href="${esc(c.cta_url || "#")}">${esc(c.cta_label)} <span class="ms">trending_flat</span></a>`
+      const img = c.image_path
+        ? `<div class="svc-img" style="background-image:url('/${esc(c.image_path)}')"></div>`
         : "";
-      const iconName = c.image_path
-        ? `<img src="/${esc(c.image_path)}" alt="" style="width:2rem;height:2rem;object-fit:contain" />`
-        : `<span class="ms">${svcIcon(c.title)}</span>`;
+      const desc = c.description ? `<p class="svc-desc">${esc(c.description)}</p>` : "";
       return `
-        <div class="svc-card glass reveal">
-          <div class="svc-icon">${iconName}</div>
-          <h3>${esc(c.title)}</h3>
-          ${desc}${link}
+        <div class="svc-card reveal">
+          ${img}
+          <div class="svc-scrim"></div>
+          <div class="svc-body">
+            <h3>${esc(c.title)}</h3>
+            ${desc}
+          </div>
         </div>`;
     })
     .join("");
