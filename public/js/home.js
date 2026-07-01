@@ -13,7 +13,7 @@ function esc(s) {
 }
 
 /* fallback decorative images (committed in assets/) */
-const HERO_FALLBACK = "assets/aiko.jpg";
+const HERO_FALLBACK = "assets/images.jpg";
 const ABOUT_FALLBACK = "assets/capiche.png";
 
 /* ---------- brands ---------- */
