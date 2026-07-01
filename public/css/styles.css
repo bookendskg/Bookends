@@ -255,6 +255,7 @@ h1, h2, h3, h4 { font-family: var(--font-display); line-height: 1.1; }
    PUBLIC — SECTIONS (generic)
    ===================================================================== */
 .section { padding: clamp(3.5rem, 8vh, 6rem) clamp(1.2rem, 4vw, 3rem); position: relative; }
+section[id] { scroll-margin-top: 96px; }
 .section-inner { max-width: 1200px; margin: 0 auto; }
 .iridescent { background: linear-gradient(135deg, #ffffff 0%, rgba(230,248,255,0.5) 50%, rgba(240,244,255,0.6) 100%); }
 .curve-down { clip-path: ellipse(150% 100% at 50% 0%); }

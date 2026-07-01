@@ -255,8 +255,27 @@ function wireSignup() {
   });
 }
 
+/* smooth-scroll in-page links without putting #hash in the URL */
+function wireAnchors() {
+  document.addEventListener("click", (e) => {
+    const a = e.target.closest('a[href^="#"]');
+    if (!a) return;
+    e.preventDefault();
+    const id = a.getAttribute("href").slice(1);
+    if (!id || id === "top") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+    // keep the address bar clean (no #hash)
+    history.replaceState(null, "", location.pathname + location.search);
+  });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   wireNav();
   wireSignup();
+  wireAnchors();
   load();
 });
