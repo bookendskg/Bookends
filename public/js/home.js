@@ -1,6 +1,7 @@
 "use strict";
 
-/* Bookends home page — fetches /api/content and renders every section. */
+/* Bookends home — fetches /api/content and renders every section
+   in the teal glassmorphism theme. */
 
 const $ = (sel, root = document) => root.querySelector(sel);
 const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
@@ -11,15 +12,11 @@ function esc(s) {
   );
 }
 
-const ARROW =
-  '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+/* fallback decorative images (committed in assets/) */
+const HERO_FALLBACK = "assets/aiko.jpg";
+const ABOUT_FALLBACK = "assets/capiche.png";
 
-/* ---------- rendering ---------- */
-
-function bgStyle(imagePath) {
-  return imagePath ? ` style="background-image:url('${esc(imagePath)}')"` : ' class="bg ph"';
-}
-
+/* ---------- brands ---------- */
 function renderBrands(list) {
   const grid = $("#brandGrid");
   if (!list.length) {
@@ -29,61 +26,50 @@ function renderBrands(list) {
   grid.innerHTML = list
     .map((c) => {
       const img = c.image_path
-        ? `<div class="bg" style="background-image:url('/${esc(c.image_path)}')"></div>`
-        : `<div class="bg ph"></div>`;
-      const cta = c.cta_label
-        ? `<a class="card-cta" href="${esc(c.cta_url || "#")}">${esc(c.cta_label)} ${ARROW}</a>`
+        ? `<div class="brand-img" style="background-image:url('/${esc(c.image_path)}')"></div>`
         : "";
-      const tag = c.subtitle ? `<div class="tag">${esc(c.subtitle)}</div>` : "";
-      const small =
-        c.coming_soon && c.description ? `<div class="small">${esc(c.description)}</div>` : "";
+      const coming = c.coming_soon ? '<span class="coming-tag">Coming Soon</span>' : "";
+      const tag = c.subtitle ? `<div class="brand-tag">${esc(c.subtitle)}</div>` : "";
+      const cta = c.cta_label
+        ? `<a class="brand-cta" href="${esc(c.cta_url || "#")}">${esc(c.cta_label)} <span class="ms" style="font-size:15px">arrow_forward</span></a>`
+        : "";
       return `
-        <article class="brand-card reveal ${c.coming_soon ? "coming" : ""}">
+        <article class="brand-card reveal">
           ${img}
-          <div class="brand-body">
-            <div class="name">${esc(c.title)}</div>
-            ${tag}${small}
+          <div class="brand-scrim"></div>
+          ${coming}
+          <div class="brand-overlay">
+            <div class="brand-name">${esc(c.title)}</div>
+            ${tag}${cta}
           </div>
-          ${cta}
         </article>`;
     })
     .join("");
 }
 
-/* line icons mapped to service / automation titles */
-const PILL_ICONS = {
-  gear: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1l2-1.6-2-3.4-2.4 1a7 7 0 0 0-1.7-1l-.4-2.5H9.6L9.2 4.5a7 7 0 0 0-1.7 1l-2.4-1-2 3.4 2 1.6a7 7 0 0 0 0 2l-2 1.6 2 3.4 2.4-1a7 7 0 0 0 1.7 1l.4 2.5h4.8l.4-2.5a7 7 0 0 0 1.7-1l2.4 1 2-3.4-2-1.6a7 7 0 0 0 .1-1z"/></svg>',
-  box: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M21 16V8l-9-5-9 5v8l9 5 9-5z"/><path d="M3.3 7.5 12 12.5l8.7-5M12 12.5V22"/></svg>',
-  megaphone: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 11v2a1 1 0 0 0 1 1h2l4 4V6L6 10H4a1 1 0 0 0-1 1z"/><path d="M14 8a4 4 0 0 1 0 8M18 5a8 8 0 0 1 0 14"/></svg>',
-  users: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0M16 5.5a3 3 0 0 1 0 5M21 20a6 6 0 0 0-4-5.7"/></svg>',
-  dollar: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M14.5 9a2.5 2.5 0 0 0-2.5-1.5c-1.4 0-2.5.8-2.5 2s1 1.7 2.5 2 2.5.8 2.5 2-1.1 2-2.5 2A2.5 2.5 0 0 1 9.5 16M12 6v1.5M12 16.5V18"/></svg>',
-  bulb: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.2 1 2.5h6c0-1.3.3-1.8 1-2.5A6 6 0 0 0 12 3z"/></svg>',
-  workflow: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="9" y="3" width="6" height="4" rx="1"/><rect x="3" y="17" width="6" height="4" rx="1"/><rect x="15" y="17" width="6" height="4" rx="1"/><path d="M12 7v4M12 11H6v6M12 11h6v6"/></svg>',
-  chart: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 20V4M4 20h16M8 16v-4M12 16V8M16 16v-6"/></svg>',
-  calendar: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg>',
-  plane: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M21 3 3 10.5l6 2.5 2.5 6L21 3z"/><path d="M9 13l3.5-3.5"/></svg>',
-  plug: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M9 2v5M15 2v5M7 7h10v3a5 5 0 0 1-10 0V7zM12 15v5"/></svg>',
-  spark: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M18 6l-2.5 2.5M8.5 15.5 6 18"/></svg>',
-};
-
-function pillIcon(title) {
+/* ---------- services / automations (rich cards) ---------- */
+const SVC_ICONS = [
+  [/operation/, "settings_suggest"],
+  [/supply|logistic/, "local_shipping"],
+  [/brand|market(?!ing automation)/, "campaign"],
+  [/people|culture|staff|hr/, "groups"],
+  [/financ|account|revenue|cost/, "payments"],
+  [/concept|design|develop/, "lightbulb"],
+  [/inventory/, "inventory_2"],
+  [/workflow|process/, "account_tree"],
+  [/report|analytic|insight/, "monitoring"],
+  [/reservation|booking|table/, "event_available"],
+  [/marketing/, "send"],
+  [/integration|connect|api/, "hub"],
+  [/menu|recipe|food/, "restaurant_menu"],
+];
+function svcIcon(title) {
   const t = (title || "").toLowerCase();
-  if (t.includes("operation")) return PILL_ICONS.gear;
-  if (t.includes("supply")) return PILL_ICONS.box;
-  if (t.includes("brand") || (t.includes("marketing") && !t.includes("automation"))) return PILL_ICONS.megaphone;
-  if (t.includes("people") || t.includes("culture")) return PILL_ICONS.users;
-  if (t.includes("financ")) return PILL_ICONS.dollar;
-  if (t.includes("concept")) return PILL_ICONS.bulb;
-  if (t.includes("inventory")) return PILL_ICONS.box;
-  if (t.includes("workflow")) return PILL_ICONS.workflow;
-  if (t.includes("report") || t.includes("analytic")) return PILL_ICONS.chart;
-  if (t.includes("reservation")) return PILL_ICONS.calendar;
-  if (t.includes("marketing")) return PILL_ICONS.plane;
-  if (t.includes("integration")) return PILL_ICONS.plug;
-  return PILL_ICONS.spark;
+  for (const [re, name] of SVC_ICONS) if (re.test(t)) return name;
+  return "auto_awesome";
 }
 
-function renderPills(list, targetSel) {
+function renderSvc(list, targetSel) {
   const grid = $(targetSel);
   if (!list.length) {
     grid.innerHTML = '<p class="empty">Nothing here yet.</p>';
@@ -91,41 +77,52 @@ function renderPills(list, targetSel) {
   }
   grid.innerHTML = list
     .map((c) => {
-      const ico = c.image_path
-        ? `<span class="pill-ico"><img src="/${esc(c.image_path)}" alt="" /></span>`
-        : `<span class="pill-ico">${pillIcon(c.title)}</span>`;
-      return `<div class="pill-card reveal">${ico}<div class="pill-title">${esc(c.title)}</div></div>`;
+      const desc = c.description ? `<p>${esc(c.description)}</p>` : "";
+      const link = c.cta_label
+        ? `<a class="svc-link" href="${esc(c.cta_url || "#")}">${esc(c.cta_label)} <span class="ms">trending_flat</span></a>`
+        : "";
+      const iconName = c.image_path
+        ? `<img src="/${esc(c.image_path)}" alt="" style="width:2rem;height:2rem;object-fit:contain" />`
+        : `<span class="ms">${svcIcon(c.title)}</span>`;
+      return `
+        <div class="svc-card glass reveal">
+          <div class="svc-icon">${iconName}</div>
+          <h3>${esc(c.title)}</h3>
+          ${desc}${link}
+        </div>`;
     })
     .join("");
 }
 
-const PIN_ICON =
-  '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s7-5.2 7-11a7 7 0 0 0-14 0c0 5.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>';
-
+/* ---------- sites ---------- */
 function renderSites(list) {
   const grid = $("#siteGrid");
   if (!list.length) {
     grid.innerHTML = '<p class="empty">No sites yet.</p>';
     return;
   }
-  let html = list
+  grid.innerHTML = list
     .map((c) => {
       const img = c.image_path
-        ? `<div class="bg" style="background-image:url('/${esc(c.image_path)}')"></div>`
-        : `<div class="bg ph"></div>`;
-      const loc = c.location ? `<div class="loc">${esc(c.location)}</div>` : "";
+        ? `<div class="site-img" style="background-image:url('/${esc(c.image_path)}')"></div>`
+        : `<div class="site-ph"></div>`;
+      const loc = c.location
+        ? `<div class="site-loc"><span class="ms">location_on</span> ${esc(c.location)}</div>`
+        : "";
       return `
         <article class="site-card reveal">
           ${img}
-          <div class="name">${esc(c.title)}</div>
-          ${loc}
+          <div class="site-scrim"></div>
+          <div class="site-meta">
+            <div class="site-name">${esc(c.title)}</div>
+            ${loc}
+          </div>
         </article>`;
     })
     .join("");
-  html += `<a class="site-card more reveal" href="#sites">${PIN_ICON}<span class="more-label">View All Sites ${ARROW}</span></a>`;
-  grid.innerHTML = html;
 }
 
+/* ---------- settings-driven bits ---------- */
 function applyText(scope, obj) {
   if (!obj) return;
   $$(`[data-${scope}]`).forEach((el) => {
@@ -137,33 +134,39 @@ function applyText(scope, obj) {
 function renderHero(hero) {
   if (!hero) return;
   applyText("hero", hero);
-  const c1 = $("#heroCta1");
-  const c2 = $("#heroCta2");
-  if (hero.cta1_label) c1.querySelector("span").textContent = hero.cta1_label;
+  const c1 = $("#heroCta1"), c2 = $("#heroCta2");
+  if (hero.cta1_label) c1.querySelector(".lbl").textContent = hero.cta1_label;
   if (hero.cta1_url) c1.setAttribute("href", hero.cta1_url);
-  if (hero.cta2_label) c2.querySelector("span").textContent = hero.cta2_label;
+  if (hero.cta2_label) c2.querySelector(".lbl").textContent = hero.cta2_label;
   if (hero.cta2_url) c2.setAttribute("href", hero.cta2_url);
+  $("#heroPhoto").src = "/" + (hero.image || HERO_FALLBACK);
 }
 
-const SOCIAL_ICONS = {
-  instagram:
-    '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>',
-  linkedin:
-    '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 10v7M7 7v.01M11 17v-4a2 2 0 0 1 4 0v4M11 17v-7"/></svg>',
-  email:
-    '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/></svg>',
-};
+function renderAbout(about, siteCount) {
+  if (about) {
+    if (about.title) $('[data-about="title"]').textContent = about.title;
+    if (about.body) $('[data-about="body"]').textContent = about.body;
+    $("#aboutPhoto").src = "/" + (about.image || ABOUT_FALLBACK);
+  } else {
+    $("#aboutPhoto").src = "/" + ABOUT_FALLBACK;
+  }
+  $("#siteCount").textContent = siteCount > 0 ? siteCount + "+" : "—";
+}
 
-function renderSocials(socials) {
-  const wrap = $("#socials");
-  if (!socials) return;
+const SOCIAL = {
+  instagram: ["photo_camera", "Instagram"],
+  linkedin: ["work", "LinkedIn"],
+  email: ["mail", "Email"],
+};
+function renderFooter(footer, socials) {
+  if (footer && footer.copyright) $('[data-footer="copyright"]').textContent = footer.copyright;
+  const wrap = $("#footerLinks");
   const items = [];
-  if (socials.instagram)
-    items.push(`<a href="${esc(socials.instagram)}" aria-label="Instagram" target="_blank" rel="noopener">${SOCIAL_ICONS.instagram}</a>`);
-  if (socials.linkedin)
-    items.push(`<a href="${esc(socials.linkedin)}" aria-label="LinkedIn" target="_blank" rel="noopener">${SOCIAL_ICONS.linkedin}</a>`);
-  if (socials.email)
-    items.push(`<a href="mailto:${esc(socials.email)}" aria-label="Email">${SOCIAL_ICONS.email}</a>`);
+  if (socials) {
+    if (socials.instagram) items.push(`<a href="${esc(socials.instagram)}" target="_blank" rel="noopener"><span class="ms" style="font-size:18px">${SOCIAL.instagram[0]}</span> Instagram</a>`);
+    if (socials.linkedin) items.push(`<a href="${esc(socials.linkedin)}" target="_blank" rel="noopener"><span class="ms" style="font-size:18px">${SOCIAL.linkedin[0]}</span> LinkedIn</a>`);
+    if (socials.email) items.push(`<a href="mailto:${esc(socials.email)}"><span class="ms" style="font-size:18px">mail</span> Email</a>`);
+  }
   wrap.innerHTML = items.join("");
 }
 
@@ -183,7 +186,7 @@ function observeReveal() {
         }
       });
     },
-    { threshold: 0.12 }
+    { threshold: 0.1 }
   );
   els.forEach((el) => io.observe(el));
 }
@@ -196,13 +199,12 @@ async function load() {
     const { settings, cards } = await res.json();
 
     renderHero(settings.hero);
-    applyText("about", settings.about);
-    applyText("footer", settings.footer);
-    renderSocials(settings.socials);
+    renderAbout(settings.about, (cards.sites || []).length);
+    renderFooter(settings.footer, settings.socials);
 
     renderBrands(cards.brands || []);
-    renderPills(cards.services || [], "#serviceGrid");
-    renderPills(cards.automations || [], "#automationGrid");
+    renderSvc(cards.services || [], "#serviceGrid");
+    renderSvc(cards.automations || [], "#automationGrid");
     renderSites(cards.sites || []);
 
     observeReveal();
@@ -218,9 +220,7 @@ function wireNav() {
   const toggle = $("#navToggle");
   const links = $("#navLinks");
   if (toggle) toggle.addEventListener("click", () => links.classList.toggle("open"));
-  $$("#navLinks a").forEach((a) =>
-    a.addEventListener("click", () => links.classList.remove("open"))
-  );
+  $$("#navLinks a").forEach((a) => a.addEventListener("click", () => links.classList.remove("open")));
 }
 
 function wireSignup() {

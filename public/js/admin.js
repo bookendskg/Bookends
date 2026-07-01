@@ -314,7 +314,6 @@ async function saveCard(e) {
 /* ---------- settings ---------- */
 const SETTINGS_SCHEMA = {
   hero: [
-    ["eyebrow", "Eyebrow"],
     ["headline", "Headline"],
     ["headline_em", "Headline (accent line)"],
     ["body", "Body", "textarea"],
@@ -322,11 +321,12 @@ const SETTINGS_SCHEMA = {
     ["cta1_url", "Button 1 link"],
     ["cta2_label", "Button 2 label"],
     ["cta2_url", "Button 2 link"],
-    ["wordmark", "Background wordmark"],
+    ["image", "Hero image path (e.g. assets/aiko.jpg)"],
   ],
   about: [
     ["title", "Title"],
     ["body", "Body", "textarea"],
+    ["image", "About image path (e.g. assets/capiche.png)"],
   ],
   contact: [
     ["email", "Email"],
