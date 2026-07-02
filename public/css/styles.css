@@ -306,19 +306,13 @@ section[id] { scroll-margin-top: 96px; }
   aspect-ratio: 3 / 4;
   border-radius: 3rem;
   overflow: hidden;
-  cursor: pointer;
   background: linear-gradient(160deg, var(--primary-fixed), var(--primary-container));
-  transition: transform 0.4s cubic-bezier(.2,.7,.2,1), box-shadow 0.4s;
 }
-.brand-card:hover { transform: translateY(-6px) scale(1.01); box-shadow: 0 24px 50px rgba(0,104,117,0.18); }
 .brand-card .brand-img {
   position: absolute; inset: 0;
   background-size: cover;
   background-position: center;
-  filter: grayscale(1);
-  transition: filter 0.7s;
 }
-.brand-card:hover .brand-img { filter: grayscale(0); }
 .brand-card .brand-scrim {
   position: absolute; inset: 0;
   background: linear-gradient(to top, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.15) 45%, transparent 70%);
@@ -356,11 +350,7 @@ section[id] { scroll-margin-top: 96px; }
   border: 1px solid var(--glass-border);
   padding: 0.45rem 1rem;
   border-radius: var(--radius-pill);
-  opacity: 0;
-  transform: translateY(8px);
-  transition: opacity 0.5s 0.05s, transform 0.5s 0.05s;
 }
-.brand-card:hover .brand-cta { opacity: 1; transform: translateY(0); }
 .brand-card .coming-tag {
   position: absolute; top: 1.2rem; left: 50%; transform: translateX(-50%);
   font-family: var(--font-label);
