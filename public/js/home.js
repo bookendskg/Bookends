@@ -81,15 +81,20 @@ function renderSvc(list, targetSel) {
         ? `<div class="svc-img" style="background-image:url('/${esc(c.image_path)}')"></div>`
         : "";
       const desc = c.description ? `<p class="svc-desc">${esc(c.description)}</p>` : "";
+      const href = c.cta_url && c.cta_url.trim() && c.cta_url.trim() !== "#" ? c.cta_url.trim() : "";
+      const tag = href ? "a" : "div";
+      const attrs = href
+        ? ` href="${esc(href)}" target="_blank" rel="noopener"`
+        : "";
       return `
-        <div class="svc-card reveal">
+        <${tag} class="svc-card reveal${href ? " clickable" : ""}"${attrs}>
           ${img}
           <div class="svc-scrim"></div>
           <div class="svc-body">
             <h3>${esc(c.title)}</h3>
             ${desc}
           </div>
-        </div>`;
+        </${tag}>`;
     })
     .join("");
 }

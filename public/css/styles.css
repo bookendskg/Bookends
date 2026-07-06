@@ -368,6 +368,7 @@ section[id] { scroll-margin-top: 96px; }
   gap: 2rem;
 }
 .svc-card {
+  display: block;
   position: relative;
   aspect-ratio: 4 / 3;
   border-radius: var(--radius-lg);
@@ -375,6 +376,7 @@ section[id] { scroll-margin-top: 96px; }
   background: linear-gradient(160deg, var(--primary-fixed), var(--primary-container));
   transition: transform 0.3s, box-shadow 0.3s;
 }
+.svc-card.clickable { cursor: pointer; }
 .svc-card:hover { transform: translateY(-6px); box-shadow: 0 20px 44px rgba(0,104,117,0.18); }
 .svc-grid > .svc-card:nth-child(3n+2) { transform: translateY(-1.5rem); }
 .svc-grid > .svc-card:nth-child(3n+2):hover { transform: translateY(-2.1rem); }
