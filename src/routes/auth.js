@@ -2,7 +2,7 @@
 
 const express = require("express");
 const rateLimit = require("express-rate-limit");
-const { login, logout, isAuthed } = require("../auth");
+const { login, logout, isAuthed, isAdmin } = require("../auth");
 
 const router = express.Router();
 
@@ -38,7 +38,7 @@ router.get("/me", (req, res) => {
   if (!isAuthed(req)) {
     return res.status(401).json({ error: "Not authenticated." });
   }
-  res.json({ email: req.session.email });
+  res.json({ email: req.session.email, isAdmin: isAdmin(req) });
 });
 
 module.exports = router;

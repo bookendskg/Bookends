@@ -29,7 +29,7 @@ form.addEventListener("submit", async (e) => {
     if (!res.ok) throw new Error(data.error || "Login failed.");
     msg.className = "form-msg ok";
     msg.textContent = "Success — redirecting…";
-    window.location.href = "/admin";
+    window.location.href = "/automations";
   } catch (err) {
     msg.className = "form-msg err";
     msg.textContent = err.message || "Login failed.";

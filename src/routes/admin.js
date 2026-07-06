@@ -4,7 +4,7 @@ const express = require("express");
 const fs = require("fs");
 const path = require("path");
 const { supabaseAdmin } = require("../supabase");
-const { requireAuthApi, sameOriginGuard } = require("../auth");
+const { requireAdminApi, sameOriginGuard } = require("../auth");
 
 const router = express.Router();
 
@@ -13,8 +13,8 @@ const SETTINGS_KEYS = ["hero", "about", "contact", "socials", "footer"];
 const ASSETS_DIR = path.join(__dirname, "..", "..", "assets");
 const IMAGE_EXT = new Set([".png", ".jpg", ".jpeg", ".webp", ".gif", ".svg", ".avif"]);
 
-// All admin routes require an authenticated session.
-router.use(requireAuthApi);
+// All admin routes require an admin session (ADMIN_EMAILS allowlist).
+router.use(requireAdminApi);
 // State-changing methods additionally require the same-origin guard.
 router.use((req, res, next) => {
   if (req.method === "GET") return next();

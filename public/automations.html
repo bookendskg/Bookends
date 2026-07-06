@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Automations — Bookends Hospitality</title>
+<link rel="icon" href="assets/Bookends_Logo_RoyalBlue.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=Geist:wght@400;500;600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="portal-top">
+    <a class="brand" href="/">
+      <img src="assets/Bookends_Logo_RoyalBlue.png" alt="Bookends" />
+      <span>Automations</span>
+    </a>
+    <div class="right">
+      <a class="who" href="/" target="_blank" rel="noopener">View site ↗</a>
+      <a class="btn btn-ghost btn-sm" id="adminLink" href="/admin" style="display:none">Admin</a>
+      <span class="who" id="who"></span>
+      <button class="btn btn-ghost btn-sm" id="logoutBtn">Log out</button>
+    </div>
+  </header>
+
+  <main class="portal-main">
+    <div class="portal-head">
+      <h1>Powerful Automations</h1>
+      <p>Your suite of internal tools — inventory, staffing, reservations and reporting.</p>
+    </div>
+    <div class="svc-grid" id="automationGrid">
+      <p class="loading-state">Loading…</p>
+    </div>
+  </main>
+
+  <script src="js/automations.js"></script>
+</body>
+</html>

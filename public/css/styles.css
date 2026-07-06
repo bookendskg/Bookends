@@ -544,6 +544,32 @@ section[id] { scroll-margin-top: 96px; }
 .loading-state { color: var(--muted); text-align: center; padding: 2rem; grid-column: 1 / -1; }
 
 /* =====================================================================
+   PORTAL (logged-in automations page)
+   ===================================================================== */
+.portal-top {
+  position: sticky; top: 0; z-index: 40;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 1rem; flex-wrap: wrap;
+  padding: 1rem clamp(1.2rem, 4vw, 3rem);
+  background: var(--glass-bg-strong);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--glass-border);
+}
+.portal-top .brand { display: flex; align-items: center; gap: 0.7rem; }
+.portal-top .brand img { height: 24px; }
+.portal-top .brand span {
+  font-family: var(--font-label); font-size: 0.7rem; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--primary); font-weight: 600;
+}
+.portal-top .right { display: flex; align-items: center; gap: 0.9rem; }
+.portal-top .who { font-size: 0.82rem; color: var(--muted); }
+.portal-main { max-width: 1200px; margin: 0 auto; padding: clamp(2rem, 6vh, 4rem) clamp(1.2rem, 4vw, 3rem) 5rem; }
+.portal-head { text-align: center; max-width: 44rem; margin: 0 auto 2.6rem; }
+.portal-head h1 { font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 800; margin-bottom: 0.6rem; }
+.portal-head p { color: var(--muted); }
+
+/* =====================================================================
    LOGIN
    ===================================================================== */
 .auth-wrap {

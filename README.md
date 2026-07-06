@@ -73,6 +73,18 @@ Sign in at `/login`, then:
   footer.
 - **Signups tab** — view captured "notify me" emails; download CSV.
 
+### Automations portal (login-gated)
+
+Automations are **not** shown on the public site. They live on a private page at
+**`/automations`** that opens after signing in — any logged-in Supabase user can
+view it (create staff accounts in Supabase → Authentication → Users). Login lands
+users on `/automations`; each card opens its tool in a new tab.
+
+Only emails listed in **`ADMIN_EMAILS`** (comma-separated env var) can reach the
+`/admin` dashboard and content APIs — other logged-in users are limited to the
+automations portal. Manage automation cards in the admin **Automations** tab as
+usual. (If `ADMIN_EMAILS` is unset, every logged-in user can reach `/admin`.)
+
 ### Adding card images
 
 1. Drop image files into the `assets/` folder (e.g. `assets/aiko.jpg`).
@@ -94,6 +106,7 @@ This repo includes [`render.yaml`](render.yaml) — a Node Web Service Blueprint
    - `SUPABASE_URL`
    - `SUPABASE_ANON_KEY`
    - `SUPABASE_SERVICE_ROLE_KEY`
+   - `ADMIN_EMAILS` (comma-separated admin emails, e.g. `you@example.com`)
    - (`SESSION_SECRET` is generated automatically; `NODE_ENV=production` is set.)
 5. **Apply / Deploy.** Visit the `*.onrender.com` URL — the home page is populated
    from the seed data; log in at `/login` to manage it.

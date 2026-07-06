@@ -7,9 +7,10 @@ const express = require("express");
 const helmet = require("helmet");
 const cookieSession = require("cookie-session");
 
-const { sessionOptions, requireAuthPage, isAuthed } = require("./auth");
+const { sessionOptions, requireAuthPage, requireAdminPage, isAuthed } = require("./auth");
 const authRoutes = require("./routes/auth");
 const publicRoutes = require("./routes/public");
+const portalRoutes = require("./routes/portal");
 const adminRoutes = require("./routes/admin");
 
 const app = express();
@@ -51,22 +52,30 @@ app.use(
 // ---- API ----
 app.use("/api", authRoutes); // /api/login, /api/logout, /api/me
 app.use("/api", publicRoutes); // /api/content, /api/signups
+app.use("/api", portalRoutes); // /api/automations (auth required)
 app.use("/api/admin", adminRoutes); // /api/admin/*
 
 // ---- Pages ----
 app.get("/", (req, res) => res.sendFile(path.join(PUBLIC_DIR, "index.html")));
 
 app.get("/login", (req, res) => {
-  if (isAuthed(req)) return res.redirect("/admin");
+  if (isAuthed(req)) return res.redirect("/automations");
   res.sendFile(path.join(PUBLIC_DIR, "login.html"));
 });
 
-app.get("/admin", requireAuthPage, (req, res) =>
+// Logged-in portal — any authenticated user.
+app.get("/automations", requireAuthPage, (req, res) =>
+  res.sendFile(path.join(PUBLIC_DIR, "automations.html"))
+);
+
+// Admin dashboard — admins only (ADMIN_EMAILS allowlist).
+app.get("/admin", requireAdminPage, (req, res) =>
   res.sendFile(path.join(PUBLIC_DIR, "admin.html"))
 );
 
 // Normalize direct .html hits to the canonical (auth-enforcing) routes.
 app.get("/admin.html", (req, res) => res.redirect("/admin"));
+app.get("/automations.html", (req, res) => res.redirect("/automations"));
 app.get("/login.html", (req, res) => res.redirect("/login"));
 app.get("/index.html", (req, res) => res.redirect("/"));
 

@@ -6,7 +6,8 @@ const { supabaseAdmin } = require("../supabase");
 
 const router = express.Router();
 
-const SECTIONS = ["brands", "services", "automations", "sites"];
+// Automations are private (login-gated) — never exposed on the public site.
+const PUBLIC_SECTIONS = ["brands", "services", "sites"];
 
 /**
  * GET /api/content
@@ -22,6 +23,7 @@ router.get("/content", async (req, res) => {
           "id, section, title, subtitle, description, location, cta_label, cta_url, coming_soon, image_path, sort_order"
         )
         .eq("published", true)
+        .in("section", PUBLIC_SECTIONS)
         .order("section", { ascending: true })
         .order("sort_order", { ascending: true }),
     ]);
@@ -35,7 +37,7 @@ router.get("/content", async (req, res) => {
     }
 
     const cards = {};
-    for (const s of SECTIONS) cards[s] = [];
+    for (const s of PUBLIC_SECTIONS) cards[s] = [];
     for (const card of cardsRes.data || []) {
       if (cards[card.section]) cards[card.section].push(card);
     }

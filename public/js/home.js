@@ -209,7 +209,6 @@ async function load() {
 
     renderBrands(cards.brands || []);
     renderSvc(cards.services || [], "#serviceGrid");
-    renderSvc(cards.automations || [], "#automationGrid");
     renderSites(cards.sites || []);
 
     observeReveal();
